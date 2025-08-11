@@ -16,15 +16,15 @@ RUN npm run build
 # 2. Runtime stage: serve static build with nginx
 FROM nginx:stable-alpine
 LABEL org.opencontainers.image.title="translation-diff" \
-      org.opencontainers.image.description="Bidirectional translation diff web UI" \
-      org.opencontainers.image.source="https://github.com/franz-rosenzweig/translation-diff" \
-      org.opencontainers.image.licenses="MIT"
+    org.opencontainers.image.description="Bidirectional translation diff web UI" \
+    org.opencontainers.image.source="https://github.com/franz-rosenzweig/translation-diff" \
+    org.opencontainers.image.licenses="MIT"
 
 # Copy built assets
 COPY --from=build /app/dist /usr/share/nginx/html
-# Provide a basic security header example (can be extended)
-RUN sed -i '/server_name  localhost;/a \\
-    add_header X-Content-Type-Options "nosniff" always;\n    add_header X-Frame-Options "SAMEORIGIN" always;\n    add_header Referrer-Policy "strict-origin-when-cross-origin" always;\n    add_header Permissions-Policy "geolocation=()";\n' /etc/nginx/conf.d/default.conf
+
+# Append minimal security headers to default server block
+RUN sed -i "/server_name  localhost;/a \\n+    add_header X-Content-Type-Options 'nosniff' always;\\n    add_header X-Frame-Options 'SAMEORIGIN' always;\\n    add_header Referrer-Policy 'strict-origin-when-cross-origin' always;\\n    add_header Permissions-Policy 'geolocation=()';" /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1
