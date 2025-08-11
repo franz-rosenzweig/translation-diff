@@ -84,6 +84,30 @@ The built static site can be deployed to GitHub Pages or any static hosting prov
 
 ---
 
+## Docker
+
+Build and run locally:
+
+```bash
+docker build -t translation-diff .
+docker run -d --name translation-diff -p 5173:80 --restart=always translation-diff
+open http://localhost:5173
+```
+
+Update after changes (rebuild):
+```bash
+docker build -t translation-diff .
+docker container rm -f translation-diff
+docker run -d --name translation-diff -p 5173:80 --restart=always translation-diff
+```
+
+Remove:
+```bash
+docker rm -f translation-diff
+```
+
+---
+
 ## License
 
 MIT © 2025 Your Name
