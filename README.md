@@ -105,6 +105,11 @@ Remove:
 ```bash
 docker rm -f translation-diff
 ```
+---
+
+### Made with AI
+
+Yep.
 
 ---
 
